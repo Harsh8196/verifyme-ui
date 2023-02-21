@@ -85,7 +85,7 @@ function Claim() {
                 
             const result = claimProduct.wait()
             console.log(result)
-            window.location.reload()
+            //window.location.reload()
         } catch (err) {
             setErrorMessage(err.message)
             // console.log(err)
