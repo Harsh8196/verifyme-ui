@@ -10,12 +10,9 @@ import PhysicalProduct from '../abi/physicalProduct.json'
 
 const WalletPrivateKey = process.env.REACT_APP_WALLETPRIVATEKEY
 const NetworkURL = process.env.REACT_APP_NETWORKURL
-const contractAddress = process.env.REACT_APP_CONTRACTADDRESS
-console.log(WalletPrivateKey,NetworkURL,contractAddress)
-const provider = new ethers.providers.JsonRpcProvider(NetworkURL)
+const provider = new ethers.providers.JsonRpcProvider('https://rpc.testnet.mantle.xyz/',{chainId:5001})
 const signer = new ethers.Wallet(WalletPrivateKey, provider)
-const contract = new ethers.Contract(contractAddress,PhysicalProduct.abi, signer)
-console.log(contract)
+
 
 
 function Claim() {
@@ -79,17 +76,18 @@ function Claim() {
         const pin = web3.utils.sha3(secretPIN.toString())
         // console.log('password', password)
         // console.log('pin', pin)
+        const contract = new ethers.Contract(contractAddress,PhysicalProduct.abi, signer)
+        console.log(contract)
         try {
             const claimProduct = await contract.claimProduct(tokenId, password, pin,email,toAccount,{
-                gasLimit: 100000})
+                gasLimit:600000})
                 
-            const result = claimProduct.wait()
+            const result = await claimProduct.wait()
             console.log(result)
-            //window.location.reload()
+            window.location.reload()
         } catch (err) {
             setErrorMessage(err.message)
-            // console.log(err)
-
+            //console.log(err)
         }
         setLoading(true)
 
